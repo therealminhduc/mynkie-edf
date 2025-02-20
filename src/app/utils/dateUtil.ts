@@ -1,8 +1,12 @@
 export class StartEndDate {
     startDate: string;
     endDate: string;
-}
 
+    constructor(startDate: string, endDate: string) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+}
 
 // FORMAT: YYYY-MM-DD
 export function formatDate(date: Date): string {
@@ -15,9 +19,10 @@ export function getDateRange(): StartEndDate {
     const oneMonthAgo = new Date();
     oneMonthAgo.setMonth(today.getMonth() - 1);
 
-    const result = new StartEndDate();
-    result.startDate = formatDate(oneMonthAgo);
-    result.endDate = formatDate(today);
+    const result = new StartEndDate(
+        formatDate(oneMonthAgo),
+        formatDate(today)
+    );
 
     return result;
 }

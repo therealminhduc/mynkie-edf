@@ -5,10 +5,11 @@ import {get} from "@vercel/edge-config";
 import fetch from "node-fetch";
 
 const token = process.env.LINKY_API_TOKEN as string;
-const session = new Session(token);
+const prm = process.env.PRM as string;
+const session = new Session(token, prm);
 session.userAgent = "mynkie";
 
-const edgeConfigId = process.env.EDITOR_CONFIG_ID;
+const edgeConfigId = process.env.EDGE_CONFIG_ID;
 const accessToken = process.env.VERCEL_ACCESS_TOKEN;
 
 
@@ -25,8 +26,12 @@ export async function GET() {
         }
 
         // Cached data is outdated, fetch fresh data
-        const data: EnergyResponse = await session.getDailyConsumption(dateRange.startDate, dateRange.endDate);
-        // await handler(data);
+        const data: EnergyResponse | null = await session.getDailyConsumption(dateRange.startDate, dateRange.endDate);
+
+        if (!data || Object.keys(data).length === 0) {
+            throw new Error("session.getDailyConsumption returned empty or invalid data");
+        }
+
         const newData = {
             items: [
                 {
@@ -37,7 +42,7 @@ export async function GET() {
             ]
         };
 
-        const response = await fetch(
+        const updateResponse = await fetch(
             `https://api.vercel.com/v1/edge-config/${edgeConfigId}/items`,
             {
                 method: "PATCH",
@@ -49,12 +54,8 @@ export async function GET() {
             }
         );
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const responseData = await response.json();
-        console.log("Data fetched and stored", responseData);
+        const updateResponseData = await updateResponse.json();
+        console.log("Edge Config update response:", updateResponseData);
 
         return NextResponse.json(data);
     } catch (e) {

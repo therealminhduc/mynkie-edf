@@ -31,7 +31,7 @@ export default function ConsumptionGraph() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch("api/linky");
+                const response = await fetch("/api/linky");
                 const data = await response.json();
                 setData(data);
                 console.log(data);
@@ -45,8 +45,8 @@ export default function ConsumptionGraph() {
     return (
         <div>
             <h1>Energy Consumption</h1>
-            <p>{ JSON.stringify(data)}</p>
-            
+            <p>{ JSON.stringify(data) }</p>
+
             <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
                 <BarChart accessibilityLayer data={chartData}>
                     <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />

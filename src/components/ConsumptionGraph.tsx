@@ -5,7 +5,7 @@ import {ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent} from "@/
 import {useEffect, useState} from "react";
 import {EnergyResponse} from "linky";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
-import {calculateCostPerDay} from "@/app/utils/priceUtils";
+import {calculateCostPerDay, getSubscriptionPrice} from "@/app/utils/priceUtils";
 
 const chartConfig = {
     conso: {
@@ -72,20 +72,26 @@ export default function ConsumptionGraph() {
                     <CardTitle>Periode: {startDate} - {endDate}</CardTitle>
                     <CardDescription>Showing the last 30 days power usage</CardDescription>
                 </div>
+
                 <div
                     className="flex flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0 sm:px-8 sm:py-6 sm:w-1/5">
-                    <CardTitle className="text-xs sm:text-sm text-muted-foreground">Yesterday&apos;s consumption</CardTitle>
+                    <CardTitle className="text-xs sm:text-sm text-muted-foreground">Yesterday&apos;s
+                        consumption</CardTitle>
                     <CardTitle className="text-xs sm:text-sm text-muted-foreground">{endDate}</CardTitle>
 
                     <div className="text-lg font-bold leading-none sm:text-2xl">
                         <p>{endDateConsumption.toFixed(2)} kWh</p>
                         <p>{calculateCostPerDay(endDateConsumption).toFixed(2)} €</p>
                     </div>
+
+                    <p className="text-xs sm:text-sm text-muted-foreground">Usage: {(endDateConsumption - getSubscriptionPrice()).toFixed(2) + '€'}</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Subscription: { getSubscriptionPrice() + '€'}</p>
+
                 </div>
             </CardHeader>
 
             <CardContent>
-                <ChartContainer config={chartConfig} className="w-full sm:h-[350px] md:h-[400px] lg:h-[500px]">
+            <ChartContainer config={chartConfig} className="w-full sm:h-[350px] md:h-[400px] lg:h-[500px]">
                     <AreaChart
                         data={data}
                         margin={{

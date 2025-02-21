@@ -62,6 +62,7 @@ export default function ConsumptionGraph() {
 
 
     const endDateConsumption: number = data.length > 0 ? data[data.length - 1].conso : 0;
+    const endDateCost: number = endDateConsumption ? calculateCostPerDay(endDateConsumption) : 0;
 
     return (
         <Card>
@@ -81,10 +82,10 @@ export default function ConsumptionGraph() {
 
                     <div className="text-lg font-bold leading-none sm:text-2xl">
                         <p>{endDateConsumption.toFixed(2)} kWh</p>
-                        <p>{calculateCostPerDay(endDateConsumption).toFixed(2)} €</p>
+                        <p>{endDateCost.toFixed(2)} €</p>
                     </div>
 
-                    <p className="text-xs sm:text-sm text-muted-foreground">Usage: {(endDateConsumption - getSubscriptionPrice()).toFixed(2) + '€'}</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">Usage: {(endDateCost - getSubscriptionPrice()).toFixed(2) + '€'}</p>
                     <p className="text-xs sm:text-sm text-muted-foreground">Subscription: { getSubscriptionPrice() + '€'}</p>
 
                 </div>

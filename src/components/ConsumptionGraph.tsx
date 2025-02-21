@@ -3,6 +3,7 @@
 import { Bar, BarChart } from "recharts"
 import { ChartConfig, ChartContainer } from "@/components/ui/chart"
 import {useEffect, useState} from "react";
+import {EnergyResponse} from "linky";
 
 const chartConfig = {
     desktop: {
@@ -25,7 +26,7 @@ const chartData = [
 ]
 
 export default function ConsumptionGraph() {
-    const [data, setData] = useState<any>(null);
+    const [data, setData] = useState<EnergyResponse | null>(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -38,11 +39,14 @@ export default function ConsumptionGraph() {
                 console.error(e);
             }
         }
+
+        fetchData();
     }, []);
     return (
         <div>
             <h1>Energy Consumption</h1>
             <p>{ JSON.stringify(data)}</p>
+            
             <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
                 <BarChart accessibilityLayer data={chartData}>
                     <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} />

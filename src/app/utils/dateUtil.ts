@@ -28,6 +28,9 @@ export function getDateRange(): StartEndDate {
 }
 
 export function getYesterday(endDate: string | null): string {
+    if (!endDate) {
+        return "";
+    }
     const today = new Date(endDate);
     today.setDate(today.getDate() - 1);
     return today.toISOString().split("T")[0];

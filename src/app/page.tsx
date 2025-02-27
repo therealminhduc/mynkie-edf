@@ -1,4 +1,4 @@
-import ConsumptionGraph from "@/components/ConsumptionGraph";
+import ConsumptionGraph from "@/app/components/ConsumptionGraph";
 
 export default function Home() {
 

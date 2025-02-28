@@ -37,7 +37,6 @@ export function ConsumptionBarChart({ data }: { data: any[] }) {
 
 
     const onBarClick = (data: any) => {
-        console.log("Clicked bar data:", data);
         setSelectedData(data);
         setDrawerOpen(true);
     };

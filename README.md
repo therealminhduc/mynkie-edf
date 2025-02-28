@@ -1,34 +1,27 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## mynkie-edf
 
-## Deployed at
-https://mynkie-edf.vercel.app
+Display power usage.
 
+(yes guess i should find a better name ...)
 
-## Getting Started
+🔗 https://mynkie-edf.vercel.app
 
-First, run the development server:
+## About this mini-project
 
-```bash
-npm run dev
-```
+Based on a personal need, tracking my energy consumption. Although the energy provider's app could do the same thing, the fact that the app required me to log in every 3 days was annoying to me. So I did some researches and found an open-source API ([Conso API](https://conso.boris.sh/)). TYSM Boris !
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## About how I retrieve data
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Instead of making an API call every single time I visit the site, I only make it once a day and store it in [Vercel Edge Config](https://vercel.com/docs/storage/edge-config) data store the first time the site is visit that day, no matter who it is. From then on, the data displayed is fetched from Edge Config.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This help reduces requests, keeping the Conso API from getting overloaded (since it's open-source :D)
 
-## Learn More
+That's it !
 
-To learn more about Next.js, take a look at the following resources:
+## What I used
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Next
+- Vercel Edge Config
+- Shadcn library
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+@mynkie

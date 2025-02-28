@@ -9,7 +9,7 @@ import {calculateCostPerDay} from "@/app/utils/priceUtils";
 import {ConsumptionSummary} from "@/app/components/charts/ConsumptionSummary";
 import {ConsumptionBarChart} from "@/app/components/charts/ConsumptionBarChart";
 import {ConsumptionAreaChart} from "@/app/components/charts/ConsumptionAreaChart";
-import {ScrollArea, ScrollBar} from "@/components/ui/scroll-area";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 
 const chartConfig = {
     conso: {
@@ -26,6 +26,25 @@ export default function ConsumptionGraph() {
     const [data, setData] = useState<{ date: string; conso: number }[]>([]);
     const [startDate, setStartDate] = useState<string | null>(null);
     const [endDate, setEndDate] = useState<string | null>(null);
+
+    const [chartType, setChartType] = useState<"bar" | "area">("bar");
+    const [isDesktop, setIsDesktop] = useState<boolean>(false);
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia("(max-width: 768px)");
+        setIsDesktop(mediaQuery.matches);
+        setChartType(mediaQuery.matches ? "bar" : "area");
+
+        const handler = () => {
+            const matches = mediaQuery.matches;
+            setIsDesktop(matches);
+            if (!matches && chartType === 'bar') {setChartType("area");}
+            if (!matches && chartType === 'area') {setChartType("bar");}
+        }
+
+        mediaQuery.addEventListener('change', handler);
+        return () => mediaQuery.removeEventListener('change', handler);
+    }, []);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -68,7 +87,6 @@ export default function ConsumptionGraph() {
 
     return (
         <Card>
-
             <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
                 <div className="flex flex-col justify-center gap-1 px-6 py-5 sm:py-6 sm:w-4/5">
                     <CardTitle>Power usage - Linky</CardTitle>
@@ -76,12 +94,32 @@ export default function ConsumptionGraph() {
                     <CardDescription>Displaying the last 30 days power usage</CardDescription>
                 </div>
 
-                <ConsumptionSummary endDate={endDate} endDateConsumption={endDateConsumption} />
+                <ConsumptionSummary endDate={endDate} endDateConsumption={endDateConsumption}/>
             </CardHeader>
 
+            {/*<div className="flex items-center justify-end px-6 py-5 sm:py-6 sm:w-1/5">*/}
+                <Select
+                    value={chartType}
+                    onValueChange={(value: 'bar' | 'area') => setChartType(value)}
+                >
+                    <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Type"/>
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="bar">Bar chart</SelectItem>
+                        <SelectItem value="area">Area chart</SelectItem>
+                    </SelectContent>
+                </Select>
+            {/*</div>*/}
+
             <CardContent>
-                <ConsumptionBarChart data={data}/>
-                <ConsumptionAreaChart data={data}/>
+                <div className="mb-4">
+                    {chartType === 'bar' ? (
+                        <ConsumptionBarChart data={data}/>
+                    ) : (
+                        <ConsumptionAreaChart data={data}/>
+                    )}
+                </div>
             </CardContent>
         </Card>
     )

@@ -1,7 +1,6 @@
 "use client"
 
-import {Area, AreaChart, Bar, BarChart, CartesianGrid, XAxis} from "recharts"
-import {ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent} from "@/components/ui/chart"
+import {ChartConfig} from "@/components/ui/chart"
 import {useEffect, useState} from "react";
 import {EnergyResponse} from "linky";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";

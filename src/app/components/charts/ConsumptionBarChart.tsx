@@ -79,12 +79,6 @@ export function ConsumptionBarChart({ data }: { data: any[] }) {
                         radius={[4, 4, 0, 0]}
                         onClick={onBarClick}
                     />
-
-                    {/*<ChartTooltip*/}
-                    {/*    content={<ChartTooltipContent/>}*/}
-                    {/*    cursor={false}*/}
-                    {/*    defaultIndex={1}*/}
-                    {/*/>*/}
                 </BarChart>
             </ChartContainer>
 

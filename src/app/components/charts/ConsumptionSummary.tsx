@@ -1,4 +1,4 @@
-import {CardTitle} from "@/components/ui/card";
+import {Card, CardDescription, CardHeader, CardTitle, CardFooter} from "@/components/ui/card";
 import {getYesterday} from "@/app/utils/dateUtil";
 import {calculateCostPerDay, getSubscriptionPrice} from "@/app/utils/priceUtils";
 
@@ -6,18 +6,23 @@ export function ConsumptionSummary({ endDate, endDateConsumption }: { endDate: s
     const endDateCost: number = endDateConsumption ? calculateCostPerDay(endDateConsumption) : 0;
 
     return (
-        <div className="flex flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l data-[active=true]:bg-muted/50 sm:border-l sm:border-t-0 sm:px-8 sm:py-6 sm:w-1/5">
-            <CardTitle className="text-xs sm:text-sm text-muted-foreground">Yesterday&apos;s
-                consumption</CardTitle>
-            <CardTitle className="text-xs sm:text-sm text-muted-foreground">{getYesterday(endDate)}</CardTitle>
+        <Card className="flex-1">
+            <CardHeader className="relative">
+                <CardDescription> Yesterday's summary ({ getYesterday(endDate) }) </CardDescription>
+                <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums"> { endDateConsumption.toFixed(2) + " kWh" }  </CardTitle>
+                <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums"> { endDateCost.toFixed(2) + " €" } </CardTitle>
+            </CardHeader>
 
-            <div className="text-lg font-bold leading-none sm:text-2xl">
-                <p>{endDateConsumption.toFixed(2)} kWh</p>
-                <p>{endDateCost.toFixed(2)} €</p>
-            </div>
+            <CardFooter className="flex-col items-start gap-1 text-sm">
+                <div className="line-clamp-1 flex gap-2 font-medium">
+                    Usage: { (endDateCost - getSubscriptionPrice()).toFixed(2) + "€" }
+                </div>
 
-            <p className="text-xs sm:text-sm text-muted-foreground">Usage: {(endDateCost - getSubscriptionPrice()).toFixed(2) + '€'}</p>
-            <p className="text-xs sm:text-sm text-muted-foreground">Subscription: {getSubscriptionPrice() + '€'}</p>
-        </div>
+                <div className="text-muted-foreground">
+                    Subscription: { getSubscriptionPrice() + '€' }
+                </div>
+            </CardFooter>   
+        </Card>
+        
     );
 }

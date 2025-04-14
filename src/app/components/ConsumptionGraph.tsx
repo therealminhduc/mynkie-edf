@@ -3,12 +3,12 @@
 import {ChartConfig} from "@/components/ui/chart"
 import {useEffect, useState} from "react";
 import {EnergyResponse} from "linky";
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter} from "@/components/ui/card";
 import {calculateCostPerDay} from "@/app/utils/priceUtils";
-import {ConsumptionSummary} from "@/app/components/charts/ConsumptionSummary";
 import {ConsumptionBarChart} from "@/app/components/charts/ConsumptionBarChart";
 import {ConsumptionAreaChart} from "@/app/components/charts/ConsumptionAreaChart";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import SectionCards from "./SectionCards";
 
 const chartConfig = {
     conso: {
@@ -85,41 +85,48 @@ export default function ConsumptionGraph() {
     const endDateConsumption: number = data.length > 0 ? data[data.length - 1].conso : 0;
 
     return (
-        <Card>
-            <CardHeader className="flex flex-col items-stretch space-y-0 border-b p-0 sm:flex-row">
-                <div className="flex flex-col justify-center gap-1 px-6 py-5 sm:py-6 sm:w-4/5">
-                    <CardTitle>Power usage - Linky</CardTitle>
-                    <CardTitle>Periode: {startDate} - {endDate}</CardTitle>
-                    <CardDescription>Displaying the last 30 days power usage</CardDescription>
+
+        <div className="flex flex-1 flex-col">
+            <div className="@container/main flex flex-1 flex-col gap-2">
+                <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+                    <div className="px-4 lg:px-6">
+                        <SectionCards 
+                            startDate = {startDate}
+                            endDate = {endDate}
+                            endDateConsumption={endDateConsumption}
+                        />
+                    </div>
+
+                    <div className="px-4 lg:px-6">
+                        <Card>
+                            <div className="flex justify-end px-6 py-4">
+                                <Select
+                                    value={chartType}
+                                    onValueChange={(value: 'bar' | 'area') => setChartType(value)}
+                                >
+                                    <SelectTrigger className="w-[180px]">
+                                        <SelectValue placeholder="Type"/>
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="bar">Bar chart</SelectItem>
+                                        <SelectItem value="area">Area chart</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                            <CardContent>
+                                <div className="mb-4">
+                                    {chartType === 'bar' ? (
+                                        <ConsumptionBarChart data={data}/>
+                                    ) : (
+                                        <ConsumptionAreaChart data={data}/>
+                                    )}
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </div>
                 </div>
-
-                <ConsumptionSummary endDate={endDate} endDateConsumption={endDateConsumption}/>
-            </CardHeader>
-
-            {/*<div className="flex items-center justify-end px-6 py-5 sm:py-6 sm:w-1/5">*/}
-                <Select
-                    value={chartType}
-                    onValueChange={(value: 'bar' | 'area') => setChartType(value)}
-                >
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Type"/>
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="bar">Bar chart</SelectItem>
-                        <SelectItem value="area">Area chart</SelectItem>
-                    </SelectContent>
-                </Select>
-            {/*</div>*/}
-
-            <CardContent>
-                <div className="mb-4">
-                    {chartType === 'bar' ? (
-                        <ConsumptionBarChart data={data}/>
-                    ) : (
-                        <ConsumptionAreaChart data={data}/>
-                    )}
-                </div>
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     )
 }

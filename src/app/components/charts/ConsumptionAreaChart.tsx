@@ -4,13 +4,10 @@ import {ChartContainer, ChartTooltip, ChartTooltipContent} from "@/components/ui
 
 export function ConsumptionAreaChart({ data }: { data: any[] }) {
     return (
-        <ChartContainer config={ chartConfig } className="w-full sm:h-[35   0px] md:h-[400px] lg:h-[500px]">
+        <ChartContainer config={ chartConfig } className="aspect-auto h-[250px] w-full">
             <AreaChart
                 data={data}
-                margin={{
-                    left: 25,
-                    right: 25,
-                }}
+
             >
                 <CartesianGrid vertical={false}/>
 
